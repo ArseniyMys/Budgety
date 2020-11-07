@@ -151,10 +151,12 @@ var UIController = (function() {
         int = num.split('.')[0]
         dec = num.split('.')[1]
 
-        if(int.length >= 4){
+        if(int.length > 3 && int.length < 6) {
             int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3)
         }
-        else{}
+        else if(int.length > 6) {
+            int = int.substr(0, int.length - 6) + ',' + int.substr(int.length - 6, 3) + ',' + int.substr(int.length - 3, 3)
+        }
 
         type == 'exp' ?  sign = '-' : sign = '+'
 
@@ -255,18 +257,10 @@ var UIController = (function() {
 
             type = document.querySelector(DOMstrings.inputType).value
 
-            if(type == 'exp') {
-                document.querySelector(DOMstrings.inputType).classList.add(DOMstrings.redFocusClass)
-                document.querySelector(DOMstrings.inputDescription).classList.add(DOMstrings.redFocusClass)
-                document.querySelector(DOMstrings.inputValue).classList.add(DOMstrings.redFocusClass)
-                document.querySelector(DOMstrings.inputBtn).classList.add(DOMstrings.redClass)
-            }
-            else if(type == 'inc'){
-                document.querySelector(DOMstrings.inputType).classList.remove(DOMstrings.redFocusClass)
-                document.querySelector(DOMstrings.inputDescription).classList.remove(DOMstrings.redFocusClass)
-                document.querySelector(DOMstrings.inputValue).classList.remove(DOMstrings.redFocusClass)
-                document.querySelector(DOMstrings.inputBtn).classList.remove(DOMstrings.redClass)
-            }
+            document.querySelector(DOMstrings.inputType).classList.toggle(DOMstrings.redFocusClass)
+            document.querySelector(DOMstrings.inputDescription).classList.toggle(DOMstrings.redFocusClass)
+            document.querySelector(DOMstrings.inputValue).classList.toggle(DOMstrings.redFocusClass)
+            document.querySelector(DOMstrings.inputBtn).classList.toggle(DOMstrings.redClass)
         }, 
     }
 }) ()
@@ -289,24 +283,26 @@ var controller = (function(budgetCtrl, UICtrl) {
     
             if(e.keyCode === 13 || e.which === 13){
                 ctrlAddItem()
-            }else{}
+            }
     
         })
 
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem)
 
         document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changeStyle)
-
     }
 
     var updateBudget = function() {
         budgetCtrl.calcBudget()
+
         var budget = budgetCtrl.getBudget()
+
         UICtrl.displayBudget(budget)
     }
 
     var updatePercentages = function() {
         budgetCtrl.calcPercentages()
+
         var percentages = budgetCtrl.getPercentages()
 
         UICtrl.displayPercentages(percentages)
@@ -356,7 +352,6 @@ var controller = (function(budgetCtrl, UICtrl) {
     
     return {
         init: function() {
-            console.log('Application has been launched')
             setupEventListeners()
             UICtrl.addDate()
         }
